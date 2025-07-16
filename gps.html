@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rescue Tracker App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Mapbox -->
+  <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      color: white;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      background-color: rgba(0,0,0,0.5);
+      font-size: 24px;
+      font-weight: bold;
+    }
+    #map {
+      height: 70vh;
+      width: 100%;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px;
+      background: rgba(0,0,0,0.3);
+    }
+    button {
+      padding: 15px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .sos { background-color: red; color: white; }
+    .sos:hover { background-color: darkred; }
+    .call { background-color: #2ecc71; color: white; }
+    .call:hover { background-color: #27ae60; }
+  </style>
+</head>
+<body>
+
+<header>🛡️ Smart Rescue Tracker Helmet Interface</header>
+
+<div id="map"></div>
+
+<div class="controls">
+  <button class="sos" onclick="sendSOS()">🚨 Send Emergency SOS</button>
+  <button class="call" onclick="callNumber('+91100')">Call Police</button>
+  <button class="call" onclick="callNumber('+91102')">Call Ambulance</button>
+  <button class="call" onclick="callNumber('+91101')">Call Fire Service</button>
+</div>
+
+<script>
+  // Mapbox token (get yours at https://account.mapbox.com/)
+  mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN_HERE';
+
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/satellite-streets-v12',
+    center: [77.1025, 28.7041], // Default to Delhi
+    zoom: 12
+  });
+
+  navigator.geolocation.getCurrentPosition(position => {
+    const { latitude, longitude } = position.coords;
+    map.setCenter([longitude, latitude]);
+
+    // Marker for user's location
+    new mapboxgl.Marker({ color: "lime" })
+      .setLngLat([longitude, latitude])
+      .setPopup(new mapboxgl.Popup().setText("You are here"))
+      .addTo(map);
+  }, () => {
+    alert("Location access denied. Enable it to use this feature.");
+  });
+
+  function sendSOS() {
+    alert("🚨 SOS Alert Sent to Registered Contacts with Your Location!");
+    // Here you'd add code to send SMS/email via backend API
+  }
+
+  function callNumber(num) {
+    window.location.href = `tel:${num}`;
+  }
+</script>
+
+</body>
+</html>
